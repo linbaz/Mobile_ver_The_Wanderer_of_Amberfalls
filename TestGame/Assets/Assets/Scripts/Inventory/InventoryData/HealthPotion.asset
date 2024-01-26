@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de4314e33c9e16047b15e2e14da75f19, type: 3}
+  m_Name: HealthPotion
+  m_EditorClassIdentifier: 
+  <IsStackable>k__BackingField: 1
+  <MaxStackSize>k__BackingField: 20
+  <Name>k__BackingField: Haelth Potion
+  <Description>k__BackingField: Is it blood?
+  <ItemImage>k__BackingField: {fileID: -7068870319514156213, guid: f18a7e2449cdf5a499e7995d774a03a5, type: 3}
+  modifiersData:
+  - statModifier: {fileID: 11400000, guid: 1f2be964ccea5b5459c6e958f8790847, type: 2}
+    value: 1
