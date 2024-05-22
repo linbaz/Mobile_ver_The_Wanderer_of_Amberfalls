@@ -1,8 +1,17 @@
+using Inventory.Model;
+using Inventory.UI;
 using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public FogOfWar fogOfWar;
+    public Transform secondaryFogOfWar;
+    [Range(0, 100)]
+    public float sightDistance;
+    public float checkInterval;
+    public UIInventoryPage inventory;
+
     public float speed = 10f;
 
     private Rigidbody2D rb;
@@ -10,44 +19,51 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(CheckFogOfWar(checkInterval));
+        secondaryFogOfWar.localScale = new Vector2(sightDistance, sightDistance) * 2f;
+
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     } 
       
     private void Update()
     {
-        if (!PauseMenu.GameIsPaused)
+        if (!inventory || !inventory.IsInventoryOpen())
         {
-            // Получаем положение курсора в мировых координатах
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (!PauseMenu.GameIsPaused)
+            {
+                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            // Получаем положение игрока в мировых координатах
-            Vector3 playerPosition = transform.position;
+                Vector3 playerPosition = transform.position;
 
-            // Определяем направление взгляда
-            
-            
                 if (mousePosition.x < playerPosition.x)
                 {
-                    // Если курсор слева от игрока, отзеркаливаем спрайт по горизонтальной оси
                     spriteRenderer.flipX = true;
                 }
                 else
                 {
-                    // Если курсор справа от игрока, не отзеркаливаем спрайт
                     spriteRenderer.flipX = false;
                 }
-            
-       
 
-            // Обрабатываем движение
-            float inputX = Input.GetAxis("Horizontal");
-            float inputY = Input.GetAxis("Vertical");
+                float inputX = Input.GetAxis("Horizontal");
+                float inputY = Input.GetAxis("Vertical");
 
-            Vector2 movement = new Vector2(inputX, inputY);
+                Vector2 movement = new Vector2(inputX, inputY);
 
-            rb.velocity = movement * speed;
+                rb.velocity = movement * speed;
+            }
         }
+        
             
     }
+
+    private IEnumerator CheckFogOfWar(float checkInterval)
+    {
+        while (true)
+        {
+            fogOfWar.MakeHole(transform.position, sightDistance);
+            yield return new WaitForSeconds(checkInterval);
+        }
+    }
+
 }

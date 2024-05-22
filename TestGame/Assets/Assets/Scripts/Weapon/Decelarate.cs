@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DecelerateOverTime : MonoBehaviour
 {
-    public float decelerationRate = 2.0f; // Скорость замедления (уменьшение скорости в секунду)
+    public float decelerationRate = 2.0f;
 
     private Rigidbody2D rb;
 
@@ -15,10 +15,8 @@ public class DecelerateOverTime : MonoBehaviour
     {
         if (rb.velocity.magnitude > 0)
         {
-            // Уменьшение скорости объекта с течением времени
             rb.velocity -= rb.velocity.normalized * decelerationRate * Time.deltaTime;
 
-            // Проверка, чтобы скорость не стала отрицательной
             if (rb.velocity.magnitude < 0)
             {
                 rb.velocity = Vector2.zero;

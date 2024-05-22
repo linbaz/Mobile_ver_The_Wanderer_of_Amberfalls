@@ -25,20 +25,33 @@ public class Sword : MonoBehaviour
                 SwordAttack();
             }
         }
-
     }
 
-    public void SwordAttack()
+    private void SwordAttack()
     {
         if (attackBlocked)
             return;
 
         animatorSword.SetTrigger("Attack");
         attackBlocked = true;
-
-        // Запускаем задержку атаки
         StartCoroutine(DelayAttack());
+        Collider2D swordCollider = GetComponent<Collider2D>();
+        Bounds swordBounds = swordCollider.bounds;
+        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(swordBounds.center, swordBounds.size, 0f);
+        foreach (Collider2D hitCollider in hitColliders)
+        {
+            if (hitCollider != swordCollider && hitCollider.CompareTag("Enemy"))
+            {
+                EntityStats enemy = hitCollider.GetComponent<EntityStats>();
+
+                if (enemy != null)
+                {
+                    enemy.GiveDamage(damage);
+                }
+            }
+        }
     }
+
 
     private IEnumerator DelayAttack()
     {
@@ -54,14 +67,21 @@ public class Sword : MonoBehaviour
             {
                 EntityStats enemy = other.GetComponent<EntityStats>();
 
-                if (enemy != null)
+                if (enemy != null && IsSwordCollidingWithEnemy(enemy))
                 {
-                   enemy.GiveDamage(damage);
+                    enemy.GiveDamage(damage);
                 }
             }
         }
-            
     }
+
+    private bool IsSwordCollidingWithEnemy(EntityStats enemy)
+    {
+        Collider2D swordCollider = GetComponent<Collider2D>();
+
+        return swordCollider.OverlapCollider(new ContactFilter2D(), new Collider2D[1]) > 0;
+    }
+
 
     public void CancelAttack()
     {

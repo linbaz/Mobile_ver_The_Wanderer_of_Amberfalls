@@ -6,7 +6,7 @@ public class EntityStats : MonoBehaviour
 {
 
     public float health;
-    public float maxHealth;
+   
 
 
     public void GiveDamage(float damage)
@@ -15,16 +15,6 @@ public class EntityStats : MonoBehaviour
         if (health <= 0)
         {
             Destroy(gameObject);
-        }
-    }
-
-    public void GiveHealth(float addHealth)
-    {
-        health += addHealth;
-
-        if (health > maxHealth)
-        {
-            health = maxHealth;
         }
     }
 

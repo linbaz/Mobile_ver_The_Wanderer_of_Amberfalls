@@ -10,10 +10,10 @@ public class RoomDungeonGenerator : SimpleRandomWalkDungeonGenerator
 {
     [SerializeField]
     private int minRoomWidth = 4, minRoomHeight = 4;
-    [SerializeField] 
+    [SerializeField]
     private int dungeonWidth = 20, dungeonHeight = 20;
     [SerializeField]
-    [Range(0,10)]
+    [Range(0, 10)]
     private int offset = 1;
     [SerializeField]
     private bool randomWalkRooms = false;
@@ -33,7 +33,7 @@ public class RoomDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
 
-        if(randomWalkRooms)
+        if (randomWalkRooms)
         {
             floor = CreateRoomsRandomly(roomsList);
         }
@@ -66,8 +66,8 @@ public class RoomDungeonGenerator : SimpleRandomWalkDungeonGenerator
             var roomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
             foreach (var position in roomFloor)
             {
-                if(position.x >= (roomBounds.xMin + offset) && position.x <= (roomBounds.xMax - offset) 
-                    && position.y >= (roomBounds.yMin - offset) && position.y  <= (roomBounds.yMax - offset))
+                if (position.x >= (roomBounds.xMin + offset) && position.x <= (roomBounds.xMax - offset)
+                    && position.y >= (roomBounds.yMin - offset) && position.y <= (roomBounds.yMax - offset))
                 {
                     floor.Add(position);
                 }
@@ -94,37 +94,37 @@ public class RoomDungeonGenerator : SimpleRandomWalkDungeonGenerator
         return corridors;
     }
 
-  private HashSet<Vector2Int> CreateCorridor(Vector2Int currentRoomCenter, Vector2Int destination)
-       {
-           HashSet<Vector2Int> corridor = new HashSet<Vector2Int>();
-           var position = currentRoomCenter;
-           corridor.Add(position);
-           while (position.y != destination.y)
-           {
-               if(destination.y > position.y)
-               {
-                   position += Vector2Int.up;
-               }
-               else if(destination.y < position.y)
-               {
-                   position += Vector2Int.down;
-               }
-               corridor.Add(position);
-           }
-           while (position.x != destination.x)
-           {
-               if (destination.x > position.x)
-               {
-                   position += Vector2Int.right;
-               }
-               else if (destination.x < position.x)
-               {
-                   position += Vector2Int.left;
-               }
-               corridor.Add(position);
-           }
-           return corridor;
-       }
+    private HashSet<Vector2Int> CreateCorridor(Vector2Int currentRoomCenter, Vector2Int destination)
+    {
+        HashSet<Vector2Int> corridor = new HashSet<Vector2Int>();
+        var position = currentRoomCenter;
+        corridor.Add(position);
+        while (position.y != destination.y)
+        {
+            if (destination.y > position.y)
+            {
+                position += Vector2Int.up;
+            }
+            else if (destination.y < position.y)
+            {
+                position += Vector2Int.down;
+            }
+            corridor.Add(position);
+        }
+        while (position.x != destination.x)
+        {
+            if (destination.x > position.x)
+            {
+                position += Vector2Int.right;
+            }
+            else if (destination.x < position.x)
+            {
+                position += Vector2Int.left;
+            }
+            corridor.Add(position);
+        }
+        return corridor;
+    }
 
 
     private Vector2Int FindClosestPointTo(Vector2Int currentRoomCenter, List<Vector2Int> roomCenters)

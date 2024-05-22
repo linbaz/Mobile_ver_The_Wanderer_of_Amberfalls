@@ -16,7 +16,7 @@ public class EquippableItemSO : ItemSO, IDestroyableItem, IItemAction
     public bool PerformAction(GameObject character)
     {
         AgentWeapon weaponSystem = character.GetComponent<AgentWeapon>();
-        if (weaponSystem != null)
+        if (weaponSystem != null)   
         {
             weaponSystem.SetWeapon(this);
             return true;

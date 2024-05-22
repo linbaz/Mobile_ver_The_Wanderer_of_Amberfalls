@@ -8,6 +8,8 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
+    public GameObject deathScreenUI;
+    public float showDeathScreenDelay = 1f;
 
     public void Update()
     {
@@ -55,5 +57,30 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         GameIsPaused = false;
         SceneManager.LoadScene("SampleScene");
+    }
+
+    public void OnEnable()
+    {
+        GameEvents.OnPlayerDeath.AddListener(ShowDeathScreenDelayed);
+    }
+
+    public void OnDisable()
+    {
+        GameEvents.OnPlayerDeath.RemoveListener(ShowDeathScreenDelayed);
+    }
+
+    public void ShowDeathScreenDelayed()
+    {
+        Invoke("ShowDeathScreen", showDeathScreenDelay);
+    }
+
+    public void ShowDeathScreen()
+    {
+        deathScreenUI.SetActive(true);
+    }
+
+    public void Retry()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -43,7 +43,6 @@ public class WeaponSwitch : MonoBehaviour
             else
             {
                 transform.GetChild(i).gameObject.SetActive(false);
-                // Отменить атаку для всех мечей, которые были отключены
                 if (swords != null && i < swords.Length)
                 {
                     swords[i].CancelAttack();

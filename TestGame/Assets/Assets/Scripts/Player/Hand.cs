@@ -29,10 +29,8 @@ public class Hand : MonoBehaviour
 
                 transform.localScale = scale;
 
-                // Проверка на зажатие кнопки мыши
                 if (Input.GetMouseButton(0))
                 {
-                    // Изменяем задержку в зависимости от времени удерживания кнопки мыши
                     currentDelay = Mathf.Clamp(currentDelay - Time.deltaTime, 0.1f, 1.0f);
                     StartCoroutine(DisableCodeForDuration(currentDelay));
                 }

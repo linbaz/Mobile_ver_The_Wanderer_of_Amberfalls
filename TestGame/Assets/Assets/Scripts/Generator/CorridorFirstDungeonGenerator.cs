@@ -7,31 +7,38 @@ using Cinemachine;
 using UnityEngine.Events;
 using NavMeshPlus.Components;
 
+// Клас для генерації данжу
 public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 {
-    //PCG parameters
+    // Параметри генерації
+    [SerializeField]
+    private int minRoomWidth = 4, minRoomHeight = 4;
+    [SerializeField]
+    private int dungeonWidth = 20, dungeonHeight = 20;
     [SerializeField]
     private int corridorLength = 14, corridorCount = 5;
     [SerializeField]
-    [Range(0.1f,1)]
+    [Range(0.1f, 1)]
     private float roomPercent = 0.8f;
 
-    //PCG Data
-    private Dictionary<Vector2Int, HashSet<Vector2Int>> roomsDictionary 
+    // Дані генерації
+    private Dictionary<Vector2Int, HashSet<Vector2Int>> roomsDictionary
         = new Dictionary<Vector2Int, HashSet<Vector2Int>>();
-    
+
     public HashSet<Vector2Int> floorPositions, corridorPositions;
 
-    //Gizmos Data
+    // Дані для відображення у редакторі
     private List<Color> roomColors = new List<Color>();
     [SerializeField]
     private bool showRoomGizmo = false, showCorridorsGizmo;
 
-    //Events
+    // Подія, що відбувається після генерації данжу
     public UnityEvent<DungeonData> OnDungeonFloorReady;
 
+    // Посилання на поверхню навігації
     public NavMeshSurface navMeshSurface;
 
+    // Перевизначений метод для запуску процесу генерації
     protected override void RunProceduralGeneration()
     {
         CorridorFirstGeneration();
@@ -45,20 +52,21 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         BakeNavMesh();
     }
 
+    // Метод для генерації данжу
     public void CorridorFirstGeneration()
     {
+        var roomsList = GenerationAlgorithm.BinarySpacePartitioning(new BoundsInt((Vector3Int)startPosition,
+            new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth, minRoomHeight);
+
         floorPositions = new HashSet<Vector2Int>();
         HashSet<Vector2Int> potentialRoomPositions = new HashSet<Vector2Int>();
 
         CreateCorridors(floorPositions, potentialRoomPositions);
 
-        //tilemapVisualizer.PaintFloorTiles(floorPositions);
-        //WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
-
         GenerateRooms(potentialRoomPositions);
-        //StartCoroutine(GenerateRoomsCoroutine(potentialRoomPositions));
     }
 
+    // Метод для генерації кімнат
     private void GenerateRooms(HashSet<Vector2Int> potentialRoomPositions)
     {
         HashSet<Vector2Int> roomPositions = CreateRooms(potentialRoomPositions);
@@ -73,10 +81,10 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
     }
 
+    // Метод для асинхронної генерації кімнат (не використовується зараз)
     private IEnumerator GenerateRoomsCoroutine(HashSet<Vector2Int> potentialRoomPositions)
     {
         yield return new WaitForSeconds(2);
-        tilemapVisualizer.Clear();
         GenerateRooms(potentialRoomPositions);
         DungeonData data = new DungeonData
         {
@@ -87,11 +95,12 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         OnDungeonFloorReady?.Invoke(data);
     }
 
+    // Метод для створення кімнат у вузьких закутках данжу
     public void CreateRoomsAtDeadEnd(List<Vector2Int> deadEnds, HashSet<Vector2Int> roomFloors)
     {
         foreach (var position in deadEnds)
         {
-            if(roomFloors.Contains(position) == false)
+            if (roomFloors.Contains(position) == false)
             {
                 var room = RunRandomWalk(randomWalkParameters, position);
                 SaveRoomData(position, room);
@@ -100,6 +109,7 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
     }
 
+    // Метод для знаходження всіх тупикових вузлів в данжу
     public List<Vector2Int> FindAllDeadEnds(HashSet<Vector2Int> floorPositions)
     {
         List<Vector2Int> deadEnds = new List<Vector2Int>();
@@ -110,7 +120,6 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             {
                 if (floorPositions.Contains(position + direction))
                     neighboursCount++;
-                
             }
             if (neighboursCount == 1)
                 deadEnds.Add(position);
@@ -118,6 +127,7 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         return deadEnds;
     }
 
+    // Метод для створення кімнат на основі вибраних позицій
     private HashSet<Vector2Int> CreateRooms(HashSet<Vector2Int> potentialRoomPositions)
     {
         HashSet<Vector2Int> roomPositions = new HashSet<Vector2Int>();
@@ -128,26 +138,29 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         foreach (var roomPosition in roomsToCreate)
         {
             var roomFloor = RunRandomWalk(randomWalkParameters, roomPosition);
-            
+
             SaveRoomData(roomPosition, roomFloor);
             roomPositions.UnionWith(roomFloor);
         }
         return roomPositions;
     }
 
+    // Метод для очищення даних про кімнати
     private void ClearRoomData()
     {
         roomsDictionary.Clear();
         roomColors.Clear();
     }
 
+    // Метод для збереження даних про кімнату
     private void SaveRoomData(Vector2Int roomPosition, HashSet<Vector2Int> roomFloor)
     {
         roomsDictionary[roomPosition] = roomFloor;
         roomColors.Add(UnityEngine.Random.ColorHSV());
     }
 
-    private void CreateCorridors(HashSet<Vector2Int> floorPositions, 
+    // Метод для створення коридорів
+    private void CreateCorridors(HashSet<Vector2Int> floorPositions,
         HashSet<Vector2Int> potentialRoomPositions)
     {
         var currentPosition = startPosition;
@@ -163,6 +176,7 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         corridorPositions = new HashSet<Vector2Int>(floorPositions);
     }
 
+    // Відображення графічних елементів у редакторі
     private void OnDrawGizmosSelected()
     {
         if (showRoomGizmo)
@@ -176,7 +190,7 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
                 Gizmos.DrawSphere((Vector2)roomData.Key, 0.5f);
                 foreach (var position in roomData.Value)
                 {
-                    Gizmos.DrawCube((Vector2)position + new Vector2(0.5f,0.5f), Vector3.one);
+                    Gizmos.DrawCube((Vector2)position + new Vector2(0.5f, 0.5f), Vector3.one);
                 }
                 i++;
             }
@@ -191,6 +205,7 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
     }
 
+    // Метод для створення NavMesh
     private void BakeNavMesh()
     {
         if (navMeshSurface != null)

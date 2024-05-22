@@ -57,6 +57,7 @@ public class Health : MonoBehaviour
     */
     private void Die()
     {
+        GameEvents.OnPlayerDeath.Invoke();
         Destroy(gameObject);
         currentHealth.Value = 10;
     }

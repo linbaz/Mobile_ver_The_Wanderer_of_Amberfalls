@@ -12,7 +12,6 @@ public class Portal1 : MonoBehaviour
 
     private void TeleportPlayer(Transform player)
     {
-        // Поиск spawnPoint во время выполнения по тегу
         GameObject spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint2");
 
         if (spawnPoint != null)

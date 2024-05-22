@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,42 +7,43 @@ namespace Inventory.UI
     public class UIInventoryPage : MonoBehaviour
     {
         [SerializeField]
-        private UIInventoryItem inventoryItemUIPrefab;
+        private UIInventoryItem inventoryItemUIPrefab; // Префаб UI елемента інвентаря
 
         [SerializeField]
-        private RectTransform contentPanel;
+        private RectTransform contentPanel; // Панель контенту інвентаря
 
         [SerializeField]
-        private UIInventoryDescription itemDescription;
+        private UIInventoryDescription itemDescription; // Опис предмету
 
         [SerializeField]
-        private MouseFollower mouseFollower;
+        private MouseFollower mouseFollower; // Слідуючий за мишею об'єкт
 
-        List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>();
+        List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>(); // Список UI елементів інвентаря
 
-        private bool isInventoryOpen = false;
+        private bool isInventoryOpen = false; // Прапорець відкриття інвентаря
 
-        public event Action<int> OnDescriptionRequested,
-            OnItemActionRequested,
-            OnStartDragging;
+        public event Action<int> OnDescriptionRequested, // Подія запиту опису предмету
+            OnItemActionRequested, // Подія запиту виконання дії над предметом
+            OnStartDragging; // Подія початку перетягування предмету
 
-        public event Action<int, int> OnSwapItems;
+        public event Action<int, int> OnSwapItems; // Подія обміну предметами
 
-        private int currentlyDraggedItemIndex = -1;
+        private int currentlyDraggedItemIndex = -1; // Індекс перетягуваного предмету
 
         [SerializeField]
-        private ItemActionPanel actionPanel;
+        private ItemActionPanel actionPanel; // Панель дій над предметом
 
+        // Метод, який викликається при створенні об'єкта
         private void Awake()
         {
-            Hide();
-            mouseFollower.Toggle(false);
-            itemDescription.ResetDescription();
+            Hide(); // Приховання інвентаря при запуску
+            mouseFollower.Toggle(false); // Вимкнення слідування за мишею
+            itemDescription.ResetDescription(); // Скидання опису предмету
         }
 
+        // Ініціалізація UI інвентаря
         public void InitializeInventoryUI(int inventorysize)
         {
-
             for (int i = 0; i < inventorysize; i++)
             {
                 UIInventoryItem uiItem = Instantiate(inventoryItemUIPrefab, Vector3.zero, Quaternion.identity, contentPanel);
@@ -55,11 +55,10 @@ namespace Inventory.UI
                 uiItem.OnItemEndDrag += HandleEndDrag;
                 uiItem.OnRigthMouseBtnClick += HandleShowItemActions;
             }
-
         }
 
-        public void UpdateData(int itemIndex,
-            Sprite itemImage, int itemQuantity)
+        // Оновлення даних елемента UI інвентаря
+        public void UpdateData(int itemIndex, Sprite itemImage, int itemQuantity)
         {
             if (listOfUIItems.Count > itemIndex)
             {
@@ -67,6 +66,7 @@ namespace Inventory.UI
             }
         }
 
+        // Обробник відображення можливих дій над предметом
         private void HandleShowItemActions(UIInventoryItem inventoryItemUI)
         {
             int index = listOfUIItems.IndexOf(inventoryItemUI);
@@ -77,11 +77,13 @@ namespace Inventory.UI
             OnItemActionRequested?.Invoke(index);
         }
 
+        // Обробник завершення перетягування предмету
         private void HandleEndDrag(UIInventoryItem inventoryItemUI)
         {
             ResetDraggedItem();
         }
 
+        // Обробник обміну предметами
         private void HandleSwap(UIInventoryItem inventoryItemUI)
         {
             int index = listOfUIItems.IndexOf(inventoryItemUI);
@@ -93,12 +95,14 @@ namespace Inventory.UI
             HandleItemSelection(inventoryItemUI);
         }
 
+        // Скидання перетягуваного предмету
         private void ResetDraggedItem()
         {
             mouseFollower.Toggle(false);
             currentlyDraggedItemIndex = -1;
         }
 
+        // Обробник початку перетягування предмету
         private void HandleBeginDrag(UIInventoryItem inventoryItemUI)
         {
             int index = listOfUIItems.IndexOf(inventoryItemUI);
@@ -109,12 +113,14 @@ namespace Inventory.UI
             OnStartDragging?.Invoke(index);
         }
 
+        // Створення елемента, який перетягується
         public void CreateDraggedItem(Sprite sprite, int quantity)
         {
             mouseFollower.Toggle(true);
             mouseFollower.SetData(sprite, quantity);
         }
 
+        // Обробник вибору предмету
         private void HandleItemSelection(UIInventoryItem inventoryItemUI)
         {
             int index = listOfUIItems.IndexOf(inventoryItemUI);
@@ -123,6 +129,7 @@ namespace Inventory.UI
             OnDescriptionRequested?.Invoke(index);
         }
 
+        // Відображення інвентаря
         public void Show()
         {
             gameObject.SetActive(true);
@@ -131,23 +138,27 @@ namespace Inventory.UI
             ResetSelection();
         }
 
+        // Скидання вибору
         public void ResetSelection()
         {
             itemDescription.ResetDescription();
             DeselectAllItems();
         }
 
+        // Додавання дії над предметом
         public void AddAction(string actionName, Action performAction)
         {
             actionPanel.AddButon(actionName, performAction);
         }
 
+        // Показ можливих дій над предметом
         public void ShowItemAction(int itemIndex)
         {
             actionPanel.Toggle(true);
             actionPanel.transform.position = listOfUIItems[itemIndex].transform.position;
         }
 
+        // Зняття вибору з усіх предметів
         private void DeselectAllItems()
         {
             foreach (UIInventoryItem item in listOfUIItems)
@@ -157,19 +168,22 @@ namespace Inventory.UI
             actionPanel.Toggle(false);
         }
 
+        // Приховання інвентаря
         public void Hide()
         {
-            actionPanel.Toggle(false );
+            actionPanel.Toggle(false);
             gameObject.SetActive(false);
             isInventoryOpen = false;
             ResetDraggedItem();
         }
 
+        // Перевірка, чи відкритий інвентар
         public bool IsInventoryOpen()
         {
             return isInventoryOpen;
         }
 
+        // Оновлення опису предмету та вибору в інвентарі
         internal void UpdateDescription(int itemIndex, Sprite itemImage, string name, string description)
         {
             itemDescription.SetDescription(itemImage, name, description);
@@ -177,6 +191,7 @@ namespace Inventory.UI
             listOfUIItems[itemIndex].Select();
         }
 
+        // Скидання даних всіх елементів інвентаря
         internal void ReselAllItems()
         {
             foreach (var item in listOfUIItems)
