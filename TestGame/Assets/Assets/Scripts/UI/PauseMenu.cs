@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;  // Add this to use UI elements
 
 public class PauseMenu : MonoBehaviour
 {
@@ -10,19 +10,33 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI;
     public GameObject deathScreenUI;
     public float showDeathScreenDelay = 1f;
+    public Button pauseMenuButton;  // Add this line
+
+    private void Start()
+    {
+        if (pauseMenuButton != null)
+        {
+            pauseMenuButton.onClick.AddListener(TogglePause);  // Add this line
+        }
+    }
 
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameIsPaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            TogglePause();
+        }
+    }
+
+    public void TogglePause()
+    {
+        if (GameIsPaused)
+        {
+            Resume();
+        }
+        else
+        {
+            Pause();
         }
     }
 

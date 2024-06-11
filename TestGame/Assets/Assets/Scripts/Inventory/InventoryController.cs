@@ -2,20 +2,26 @@ using Inventory.Model;
 using Inventory.UI;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Inventory
 {
     public class InventoryController : MonoBehaviour
     {
         public UIInventoryPage inventoryUI; // Посилання на UI інвентар
-
         public InventorySO inventoryData; // Дані інвентаря (ScriptableObject)
-
         public List<InventoryItem> initialItems = new List<InventoryItem>(); // Початкові предмети
+        public Button inventoryMenuButton;  // Add this line
 
         // Метод, який викликається при старті
         public void Start()
         {
+            // Ensure that the inventoryMenuButton is assigned in the Inspector
+            if (inventoryMenuButton != null)
+            {
+                inventoryMenuButton.onClick.AddListener(ToggleInventory); // Add event listener for button click
+            }
+
             PrepareUI(); // Підготовка UI
             PrepareInventoryData(); // Підготовка даних інвентаря
         }
@@ -132,24 +138,30 @@ namespace Inventory
         }
 
         // Оновлення в кожному кадрі
-        public void Update()
+        public void OnClick()
         {
             // Перевірка натискання клавіші I або Tab
             if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Tab))
             {
-                // Перевірка, чи інтерфейс інвентаря неактивний
-                if (inventoryUI.isActiveAndEnabled == false)
+                ToggleInventory(); // Відображення або приховання інтерфейсу інвентаря
+            }
+        }
+
+        // Обробник натискання кнопки інвентаря
+        public void ToggleInventory()
+        {
+            // Перевірка, чи інтерфейс інвентаря неактивний
+            if (!inventoryUI.isActiveAndEnabled)
+            {
+                inventoryUI.Show(); // Відображення інтерфейсу інвентаря
+                foreach (var item in inventoryData.GetCurrentInventoryState())
                 {
-                    inventoryUI.Show(); // Відображення інтерфейсу інвентаря
-                    foreach (var item in inventoryData.GetCurrentInventoryState())
-                    {
-                        inventoryUI.UpdateData(item.Key, item.Value.item.ItemImage, item.Value.quantity);
-                    }
+                    inventoryUI.UpdateData(item.Key, item.Value.item.ItemImage, item.Value.quantity);
                 }
-                else
-                {
-                    inventoryUI.Hide(); // Приховання інтерфейсу інвентаря
-                }
+            }
+            else
+            {
+                inventoryUI.Hide(); // Приховання інтерфейсу інвентаря
             }
         }
     }

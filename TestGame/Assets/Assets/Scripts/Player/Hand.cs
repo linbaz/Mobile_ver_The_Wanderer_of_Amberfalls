@@ -36,7 +36,7 @@ public class Hand : MonoBehaviour
                 }
             }
         }
-        
+
     }
 
     private IEnumerator DisableCodeForDuration(float duration)

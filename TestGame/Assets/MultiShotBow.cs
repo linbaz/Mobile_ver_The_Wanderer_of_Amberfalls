@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MultiShotBow : Bow
 {
@@ -7,18 +8,41 @@ public class MultiShotBow : Bow
     public float cooldownTime = 0.5f; // Время перезарядки между выстрелами
     private float currentCooldown = 0f; // Текущее время перезарядки
 
+    public Button attackButton; // Ссылка на кнопку на экране
+    private bool isButtonPressed = false; // Флаг для проверки нажатия кнопки
+
+    private void Start()
+    {
+        // Назначаем обработчик нажатия на кнопку
+        attackButton.onClick.AddListener(OnAttackButtonPressed);
+    }
+
+    private void OnAttackButtonPressed()
+    {
+        isButtonPressed = true;
+    }
+
     private void Update()
     {
         if (!inventory || !inventory.IsInventoryOpen())
         {
             if (!PauseMenu.GameIsPaused)
             {
-                currentCooldown -= Time.deltaTime; // Уменьшаем время перезарядки
+                // Уменьшаем время перезарядки
+                if (currentCooldown > 0f)
+                {
+                    currentCooldown -= Time.deltaTime;
+                }
 
-                if (Input.GetKey(KeyCode.Mouse0) && currentCooldown <= 0f)
+                // Проверяем, удерживается ли кнопка
+                if (isButtonPressed && currentCooldown <= 0f)
                 {
                     Shoot();
                     currentCooldown = cooldownTime; // Устанавливаем новое время перезарядки
+                }
+                else
+                {
+                    isButtonPressed = false;
                 }
             }
         }
@@ -26,8 +50,11 @@ public class MultiShotBow : Bow
 
     public override void Shoot()
     {
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 directionToCursor = (mousePosition - firePoint.position).normalized;
+        // Определяем позицию игрока (можно изменить на нужный объект, если игрок не используется)
+        Vector3 playerPosition = transform.position;
+
+        // Направление от игрока до firePoint
+        Vector2 directionToFirePoint = (firePoint.position - playerPosition).normalized;
 
         // Угол между стрелами
         float angleBetweenArrowsRad = Mathf.Deg2Rad * angleBetweenArrows;
@@ -43,7 +70,7 @@ public class MultiShotBow : Bow
 
             // Поворачиваем направление курсора на угол между стрелами
             Quaternion spreadRotation = Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * currentAngle);
-            Vector2 spreadDirection = spreadRotation * directionToCursor;
+            Vector2 spreadDirection = spreadRotation * directionToFirePoint;
 
             // Создаем стрелу
             GameObject arrow = Instantiate(bullet, firePoint.position, spreadRotation);
@@ -58,4 +85,19 @@ public class MultiShotBow : Bow
         }
     }
 
+    public bool IsTouched(Touch touch)
+    {
+        RectTransform rectTransform = attackButton.GetComponent<RectTransform>();
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, touch.position, null, out localPoint);
+        return rectTransform.rect.Contains(localPoint);
+    }
+
+    public void HandleTouch(Touch touch)
+    {
+        if (touch.phase == TouchPhase.Began)
+        {
+            OnAttackButtonPressed();
+        }
+    }
 }
