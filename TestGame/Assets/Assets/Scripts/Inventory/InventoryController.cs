@@ -147,13 +147,11 @@ namespace Inventory
             }
         }
 
-        // Обробник натискання кнопки інвентаря
         public void ToggleInventory()
         {
-            // Перевірка, чи інтерфейс інвентаря неактивний
             if (!inventoryUI.isActiveAndEnabled)
             {
-                inventoryUI.Show(); // Відображення інтерфейсу інвентаря
+                inventoryUI.Show(); 
                 foreach (var item in inventoryData.GetCurrentInventoryState())
                 {
                     inventoryUI.UpdateData(item.Key, item.Value.item.ItemImage, item.Value.quantity);
@@ -161,7 +159,7 @@ namespace Inventory
             }
             else
             {
-                inventoryUI.Hide(); // Приховання інтерфейсу інвентаря
+                inventoryUI.Hide(); 
             }
         }
     }

@@ -1,37 +1,45 @@
 using Inventory.UI;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Sword : MonoBehaviour
 {
     public Animator animatorSword;
-    public float delay = 0.3f;
+    public float delay = 0f;
     public float damage = 5f;
     private bool attackBlocked;
     public UIInventoryPage inventory;
 
+    public Button attackButton; // Публічне поле для кнопки атаки
 
     private void Start()
     {
         attackBlocked = false;
+
+        // Додайте обробник події для кнопки атаки
+        attackButton.onClick.AddListener(StartAttack);
     }
 
     private void Update()
     {
         if (!inventory || !inventory.IsInventoryOpen())
         {
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                SwordAttack();
-            }
+            attackButton.onClick.AddListener(StartAttack);
+        }
+    }
+
+    public void StartAttack()
+    {
+        if (!attackBlocked)
+        {
+            Debug.Log("Атака");
+            SwordAttack();
         }
     }
 
     private void SwordAttack()
     {
-        if (attackBlocked)
-            return;
-
         animatorSword.SetTrigger("Attack");
         attackBlocked = true;
         StartCoroutine(DelayAttack());
@@ -52,7 +60,6 @@ public class Sword : MonoBehaviour
         }
     }
 
-
     private IEnumerator DelayAttack()
     {
         yield return new WaitForSeconds(delay);
@@ -61,7 +68,7 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (attackBlocked)
         {
             if (!other.gameObject.CompareTag("Player"))
             {
@@ -81,7 +88,6 @@ public class Sword : MonoBehaviour
 
         return swordCollider.OverlapCollider(new ContactFilter2D(), new Collider2D[1]) > 0;
     }
-
 
     public void CancelAttack()
     {

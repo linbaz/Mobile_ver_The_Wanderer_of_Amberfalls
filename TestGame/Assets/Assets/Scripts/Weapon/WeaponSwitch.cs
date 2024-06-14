@@ -1,33 +1,34 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponSwitch : MonoBehaviour
 {
     public Sword[] swords;
-
     public int selectedWeapon = 0;
+
+    public Button button1;
+    public Button button2;
 
     private void Start()
     {
         swords = GetComponentsInChildren<Sword>();
         SelectWeapon();
+
+        // Додайте обробники подій для кнопок
+        button1.onClick.AddListener(() => SelectWeaponByIndex(0));
+        button2.onClick.AddListener(() => SelectWeaponByIndex(1));
     }
 
     public void Update()
     {
-        int previousSelectedWeapon = selectedWeapon;
+        // Залиште цей метод порожнім або видаліть його, якщо не потрібно обробляти клавіатуру
+    }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+    public void SelectWeaponByIndex(int index)
+    {
+        if (index < transform.childCount)
         {
-            selectedWeapon = 0;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2) && transform.childCount >= 2)
-        {
-            selectedWeapon = 1;
-        }
-
-        if (previousSelectedWeapon != selectedWeapon)
-        {
+            selectedWeapon = index;
             SelectWeapon();
         }
     }
