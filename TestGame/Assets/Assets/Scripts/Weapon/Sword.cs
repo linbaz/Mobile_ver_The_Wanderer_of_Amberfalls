@@ -15,10 +15,12 @@ public class Sword : MonoBehaviour
     public Button attackButton; // Публічне поле для кнопки атаки
 
     private Coroutine attackCoroutine;
+    private Transform playerTransform;
 
     private void Start()
     {
         isAttacking = false;
+        playerTransform = transform.parent; // Предполагается, что меч является дочерним объектом персонажа
 
         // Додайте обробники подій для кнопки атаки
         attackButton.onClick.AddListener(StartAttack);
@@ -45,6 +47,19 @@ public class Sword : MonoBehaviour
         if (!inventory || !inventory.IsInventoryOpen())
         {
             attackButton.onClick.AddListener(StartAttack);
+        }
+
+        // Оновлюємо напрямок меча в залежності від руху гравця
+        UpdateSwordDirection();
+    }
+
+    private void UpdateSwordDirection()
+    {
+        Vector2 direction = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        if (direction != Vector2.zero)
+        {
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
     }
 
