@@ -11,6 +11,7 @@ TagManager:
   - SpawnPoint2
   - MinimapIcon
   - Arrow
+  - Coin
   layers:
   - Default
   - TransparentFX

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Inventory.UI
 {
-    public class ItemActionPanel : MonoBehaviour
+    public class ItemActionPanel:MonoBehaviour
     {
         [SerializeField]
         private GameObject buttonPrefab;
@@ -15,7 +15,7 @@ namespace Inventory.UI
         {
             GameObject button = Instantiate(buttonPrefab, transform);
             button.GetComponent<Button>().onClick.AddListener(() => onClickAction());
-            button.GetComponentInChildren<TMPro.TMP_Text>().text = name;    
+            button.GetComponentInChildren<TMPro.TMP_Text>().text = name;
         }
 
         public void Toggle(bool val)
@@ -33,6 +33,6 @@ namespace Inventory.UI
             }
         }
 
-        
+
     }
 }

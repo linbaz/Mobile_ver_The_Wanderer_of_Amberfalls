@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UnityEngine.MonoBehaviour">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="CollisionDamage">
+    <Position X="10" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ARIAAAAAgAAAAAAAAAAAAAAAAAAAAAAABAAAACAAAAE=</HashCode>
+      <FileName>Assets\Assets\Scripts\Enemy\CollisionToDamge.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyShoot">
+    <Position X="14" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAAAAAACAAAAAEAAAAAAAAAAgAKQEAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Assets\Scripts\Enemy\EnemyShoot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="test">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BRYAAABA0CAAAYAAAAAAAAACAABAAoARBAAAASIgAAE=</HashCode>
+      <FileName>Assets\Assets\Scripts\Enemy\MelleEnemyController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RandomMovement2D">
+    <Position X="10" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQAAAAAACAAAAAEAAAAAAAAAAgAA4AAAAAhAAAgAAA=</HashCode>
+      <FileName>Assets\Assets\Scripts\Enemy\RandomMovement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyRanged">
+    <Position X="14" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACCAAAAAAAAAAABAAAAAAAABABAAAAAAAAA=</HashCode>
+      <FileName>Assets\Assets\Scripts\Enemy\RangedEnemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RangedTest">
+    <Position X="15.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQAAgAAECCAAQAAAAAAAABCAAAAAoARABAAAAIgAAA=</HashCode>
+      <FileName>Assets\Assets\Scripts\Enemy\RangedTest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EntityStats">
+    <Position X="15.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Assets\Assets\Scripts\Enemy\Stats.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

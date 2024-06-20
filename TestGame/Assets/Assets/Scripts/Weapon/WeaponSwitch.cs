@@ -21,7 +21,7 @@ public class WeaponSwitch : MonoBehaviour
 
     public void Update()
     {
-        // Залиште цей метод порожнім або видаліть його, якщо не потрібно обробляти клавіатуру
+       
     }
 
     public void SelectWeaponByIndex(int index)

@@ -590,7 +590,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2253911629886400664, guid: 9ff5f5cb88789734d838b8723ff015d4, type: 3}
       propertyPath: m_Name
-      value: Slime Variant
+      value: MelleEnemyVariant
       objectReference: {fileID: 0}
     - target: {fileID: -2253911629886400664, guid: 9ff5f5cb88789734d838b8723ff015d4, type: 3}
       propertyPath: m_Layer
@@ -792,6 +792,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3468bb4930d8841aa15644e0895dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lootItems:
+  - {fileID: 6510372580098085921, guid: e8e29b74870381d4281a79a843a38bad, type: 3}
+  - {fileID: 5104102740156404837, guid: acc4cf8b65401174db46b65c0986937a, type: 3}
   health: 10
 --- !u!50 &6598395488394626000
 Rigidbody2D:

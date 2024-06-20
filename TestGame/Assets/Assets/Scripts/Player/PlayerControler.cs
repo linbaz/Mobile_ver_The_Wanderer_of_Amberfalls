@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Vector3 lastPosition; // Предыдущее положение персонажа
 
+    public CoinManager cm;
+
     private void Start()
     {
         StartCoroutine(CheckFogOfWar(checkInterval));
@@ -71,4 +73,14 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(checkInterval);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Coin"))
+        {
+            Destroy(other.gameObject);
+            cm.coinCount++;
+        }
+    }
 }
+

@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3359009986130035186
 SpriteRenderer:
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <InventoryItem>k__BackingField: {fileID: 11400000, guid: 870937bc6c884054cbbb4baf62ca12bc, type: 2}
-  <Quantity>k__BackingField: 5
+  <Quantity>k__BackingField: 1
   audioSource: {fileID: 4527205356527228080}
   duration: 0.3
 --- !u!82 &4527205356527228080

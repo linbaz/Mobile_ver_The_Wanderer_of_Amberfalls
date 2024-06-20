@@ -1,25 +1,39 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections;
 
 public class MultiShotBow : Bow
 {
     public int numberOfArrows = 3; // Количество стрел
     public float angleBetweenArrows = 10f; // Угол между стрелами
     public float cooldownTime = 0.5f; // Время перезарядки между выстрелами
-    private float currentCooldown = 0f; // Текущее время перезарядки
 
+    private float currentCooldown = 0f; // Текущее время перезарядки
     public Button attackButton; // Ссылка на кнопку на экране
-    private bool isButtonPressed = false; // Флаг для проверки нажатия кнопки
+    private Coroutine attackCoroutine; // Корутина для повторной атаки
+    private bool isAttacking; // Флаг для проверки состояния атаки
 
     private void Start()
     {
-        // Назначаем обработчик нажатия на кнопку
-        attackButton.onClick.AddListener(OnAttackButtonPressed);
-    }
+        isAttacking = false;
 
-    private void OnAttackButtonPressed()
-    {
-        isButtonPressed = true;
+        // Добавляем обработчики событий для кнопки атаки
+        EventTrigger trigger = attackButton.gameObject.AddComponent<EventTrigger>();
+
+        EventTrigger.Entry entryPointerDown = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerDown
+        };
+        entryPointerDown.callback.AddListener((data) => { OnAttackButtonDown(); });
+        trigger.triggers.Add(entryPointerDown);
+
+        EventTrigger.Entry entryPointerUp = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerUp
+        };
+        entryPointerUp.callback.AddListener((data) => { OnAttackButtonUp(); });
+        trigger.triggers.Add(entryPointerUp);
     }
 
     private void Update()
@@ -33,18 +47,38 @@ public class MultiShotBow : Bow
                 {
                     currentCooldown -= Time.deltaTime;
                 }
-
-                // Проверяем, удерживается ли кнопка
-                if (isButtonPressed && currentCooldown <= 0f)
-                {
-                    Shoot();
-                    currentCooldown = cooldownTime; // Устанавливаем новое время перезарядки
-                }
-                else
-                {
-                    isButtonPressed = false;
-                }
             }
+        }
+    }
+
+    private void OnAttackButtonDown()
+    {
+        if (attackCoroutine == null)
+        {
+            attackCoroutine = StartCoroutine(RepeatAttack());
+        }
+    }
+
+    private void OnAttackButtonUp()
+    {
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+            isAttacking = false;
+        }
+    }
+
+    private IEnumerator RepeatAttack()
+    {
+        while (true)
+        {
+            if (currentCooldown <= 0f)
+            {
+                Shoot();
+                currentCooldown = cooldownTime; // Устанавливаем новое время перезарядки
+            }
+            yield return null; // Ждем один кадр перед следующей проверкой
         }
     }
 
@@ -97,7 +131,11 @@ public class MultiShotBow : Bow
     {
         if (touch.phase == TouchPhase.Began)
         {
-            OnAttackButtonPressed();
+            OnAttackButtonDown();
+        }
+        else if (touch.phase == TouchPhase.Ended)
+        {
+            OnAttackButtonUp();
         }
     }
 }
